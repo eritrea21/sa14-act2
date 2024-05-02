@@ -1,43 +1,45 @@
-// // script.js
-document.getElementById('weatherForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent form submission
 
-    const city = document.getElementById('city').value;
-    if (!city) return;
+        document.getElementById('search-form').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            const city = document.getElementById('city-input').value;
+            fetchWeatherData(city);
+        });
 
-    fetch(`http://weatherapi.com/v1/forecast.json?key=8f97478d4a8049e887012049243004&q=${city}&days=5`)
-        .then(response => response.json())
-        .then(data => {
-            const current = data.current;
-            const forecast = data.forecast.forecastday;
+        function fetchWeatherData(city) {
+            const apiKey = '8f97478d4a8049e887012049243004'; 
+            const apiUrl = `http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=5`;
 
-            let output = `
-                <div class="weather-info">
-                    <h2>Weather in ${data.location.name}</h2>
-                    <p>Current Time: ${new Date().toLocaleTimeString()}</p>
-                    <p>Temperature: ${current.temp_c} °C</p>
-                    <p>Condition: ${current.condition.text} <img src="${current.condition.icon}" alt="Condition Icon"></p>
-                    <p>Humidity: ${current.humidity} %</p>
-                </div>
-                <h3>5-Day Forecast</h3>
-                <ul>
-            `;
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Weather data not found.');
+                    }
+                    return response.json();
+                })
+                .then(data => displayWeatherData(data))
+                .catch(error => console.error('Error:', error));
+        }
 
-            forecast.forEach(day => {
-                output += `
-                    <li>
-                        <div class="weather-info">
-                            <h4>${day.date}</h4>
-                            <p>Condition: ${day.day.condition.text} <img src="${day.day.condition.icon}" alt="Condition Icon"></p>
-                            <p>Temperature: ${day.day.mintemp_c} - ${day.day.maxtemp_c} °C</p>
-                        </div>
-                    </li>
+        function displayWeatherData(data) {
+            const weatherDetails = document.getElementById('weather-details');
+            const { current, forecast, location } = data;
+            const currentConditionsHtml = `
+                <h2>Weather in ${location.name}, ${location.country}</h2>
+                <p><strong>Temperature:</strong> ${current.temp_c} °C</p>
+                <p><img src="${current.condition.icon}" alt="Weather Icon"> ${current.condition.text}</p>
+                <p><strong>Humidity:</strong> ${current.humidity}%</p>
+                `;
+
+            let forecastHtml = '<h3>5-Day Forecast</h3>';
+            forecast.forecastday.forEach(day => {
+                forecastHtml += `
+                    <div>
+                        <h4>${day.date}</h4>
+                        <p>Max: ${day.day.maxtemp_c} °C, Min: ${day.day.mintemp_c} °C</p>
+                        <p><img src="${day.day.condition.icon}" alt="Weather Icon"> ${day.day.condition.text}</p>
+                    </div>
                 `;
             });
 
-            output += '</ul>';
-
-            document.getElementById('weatherData').innerHTML = output;
-        })
-        .catch(error => console.error('Error:', error));
-});
+            weatherDetails.innerHTML = currentConditionsHtml + forecastHtml;
+        };

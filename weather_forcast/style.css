@@ -1,16 +1,14 @@
-/* style.css */
+
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background-image: url('../photo_1.jpg');
-
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-color: aquamarine;
-
+    font-family: Arial, sans-serif;
+    padding: 20px;
 }
 
-#weatherData {
-  margin-top: 20px;
+#weather-dashboard {
+    max-width: 600px;
+    margin: auto;
+}
+
+form {
+    margin-bottom: 20px;
 }
