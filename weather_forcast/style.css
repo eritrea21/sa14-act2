@@ -2,10 +2,11 @@
 body {
     font-family: Arial, sans-serif;
     padding: 20px;
-    background-image: url('photo_1.jpg'); /* Replace with the actual path to your image */
-    background-size: cover; /* Ensures the image covers the entire screen */
-    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-image: url('photo_1.jpg');
+    background-size: cover; 
+    background-repeat: no-repeat; 
     background-attachment: fixed;
+    height: 400px;
     
 }
 
